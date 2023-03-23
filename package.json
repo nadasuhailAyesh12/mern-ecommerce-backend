@@ -2,10 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
-  
+  "main": "./backend/server.js",
   "scripts": {
-    "dev":"node server.js"
+    "dev": " SET NODE_ENV=DEVELOPMENT& nodemon backend/server.js",
+    "prod": "SET NODE_ENV=PRODUCTION& nodemon backend/server.js",
+    "seeder":" node backend/scripts/seeder.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/nadasuhailAyesh12/mern-ecommerce#readme",
   "dependencies": {
+    "bad-words": "^3.0.4",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.35.0",
     "dotenv": "^16.0.3",
