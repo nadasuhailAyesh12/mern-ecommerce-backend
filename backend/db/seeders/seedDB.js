@@ -1,22 +1,18 @@
-const Product = require("../../models/Product");
 const dbConnection = require("../connection");
-const products = require("../data/products.json")
 
 dbConnection();
 
-const seedProducts = async () => {
+const seedData = async (model, data) => {
     try {
-        await Product.deleteMany()
-        console.log("Products deleted");
-        await Product.insertMany(products)
-        console.log("Products inserted");
-        process.exit()
-    }
-    catch (error) {
+        await model.deleteMany();
+        console.log("data deleted");
+        await model.insertMany(data);
+        console.log("data inserted");
+        process.exit();
+    } catch (error) {
         console.log(error.message);
         process.exit();
     }
-}
+};
 
-module.exports = seedProducts
-
+module.exports = seedData;
