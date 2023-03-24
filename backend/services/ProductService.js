@@ -1,3 +1,4 @@
+const ErrorHandler = require("../helpers/ErrorHandler");
 const Product = require("../models/Product");
 const productRepository = require("../repositories/ProductRepository")
 
@@ -16,7 +17,7 @@ const getProducts = async () => {
 const getSingleProduct = async (id) => {
     const product = await productRepository.getSingleProduct(id);
     if (!product) {
-        throw new Error("product not found")
+        throw new ErrorHandler("product not found", 404)
     }
     return product
 }
