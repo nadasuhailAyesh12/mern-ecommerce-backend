@@ -1,4 +1,5 @@
 const { node_env } = require("../config/enviroment");
+const ErrorHandler = require("../helpers/ErrorHandler");
 
 module.exports = (err, req, res, next) => {
     err.message = err.message || "internal server error";
@@ -15,6 +16,15 @@ module.exports = (err, req, res, next) => {
         });
     }
     else if (node_env == "PRODUCTION") {
+        if (err.name == "CastError") {
+            err = new ErrorHandler(`Resource not found. Invalid :${err.path}`, 400);
+        }
+
+        else if (err.name = "validationError") {
+            const message = Object.values(err.errors).map(value => value.message);
+            err = new ErrorHandler(message, 400);
+        }
+
         res.status(err.statusCode).json({
             sucess: false,
             message: err.message,
