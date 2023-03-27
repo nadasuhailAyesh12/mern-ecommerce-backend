@@ -1,5 +1,7 @@
 const productService = require("../services/ProductService");
 const catchAsyncErrors = require("../middlewars/catchAsyncErrors");
+const APIFeatures = require("../helpers/APIFeatures");
+const Product = require("../models/Product");
 
 const createProduct = catchAsyncErrors(async (req, res) => {
     const product = await productService.createProduct(req.body);
@@ -10,12 +12,15 @@ const createProduct = catchAsyncErrors(async (req, res) => {
 });
 
 const getProducts = catchAsyncErrors(async (req, res) => {
-    const products = await productService.getProducts();
+    const products = await productService.getProducts(req.query)
+
     res.status(201).json({
         success: true,
         count: products.length,
         products,
+
     });
+
 });
 
 const getSingleProduct = catchAsyncErrors(async (req, res) => {
