@@ -1,6 +1,8 @@
+const APIFeatures = require("../helpers/APIFeatures");
 const ErrorHandler = require("../helpers/ErrorHandler");
 const Product = require("../models/Product");
 const productRepository = require("../repositories/ProductRepository")
+
 
 const createProduct = async (body) => {
     // should add user id and image uploding later, authorisation just for admin users
@@ -8,10 +10,16 @@ const createProduct = async (body) => {
     return product;
 }
 
-const getProducts = async () => {
-    // this service will be more than just using productRepository,we will pagination,search,filter later
-    const products = await productRepository.getProducts()
-    return products
+const getProducts = async (requestQuery) => {
+    const productsCount = await productRepository.getProducts().count
+
+    const apiFeatures = new APIFeatures(productRepository.getProducts().displayProducts, requestQuery)
+        .search()
+        .filter()
+        .pagination()
+
+    const products = await apiFeatures.query;
+    return { products, productsCount }
 }
 
 const getSingleProduct = async (id) => {

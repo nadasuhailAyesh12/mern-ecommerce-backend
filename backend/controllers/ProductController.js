@@ -10,12 +10,15 @@ const createProduct = catchAsyncErrors(async (req, res) => {
 });
 
 const getProducts = catchAsyncErrors(async (req, res) => {
-    const products = await productService.getProducts();
+    const { products, productsCount } = await productService.getProducts(req.query)
+
     res.status(201).json({
         success: true,
         count: products.length,
         products,
+        productsCount
     });
+
 });
 
 const getSingleProduct = catchAsyncErrors(async (req, res) => {
@@ -48,4 +51,5 @@ const productController = {
     updateProduct,
     deleteProduct,
 };
+
 module.exports = productController;
