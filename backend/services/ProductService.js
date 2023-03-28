@@ -11,13 +11,15 @@ const createProduct = async (body) => {
 }
 
 const getProducts = async (requestQuery) => {
-    // // this service will be more than just using productRepository,we will pagination,search,filter later
-    const apiFeatures = new APIFeatures(productRepository.getProducts(), requestQuery)
+    const productsCount = await productRepository.getProducts().count
+
+    const apiFeatures = new APIFeatures(productRepository.getProducts().displayProducts, requestQuery)
         .search()
-        .filter();
+        .filter()
+        .pagination()
 
     const products = await apiFeatures.query;
-    return products
+    return { products, productsCount }
 }
 
 const getSingleProduct = async (id) => {

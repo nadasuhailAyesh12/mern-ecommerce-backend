@@ -2,7 +2,15 @@ const Product = require("../models/Product");
 
 const createProduct = (options) => Product.create({ ...options })
 
-const getProducts = () => Product.find()
+const getProducts = () => {
+    return {
+        displayProducts: Product.find(),
+        //return count to use it in frontend later
+        count: Product.countDocuments()
+    }
+}
+
+
 
 const getSingleProduct = (id) => Product.findById(id)
 
