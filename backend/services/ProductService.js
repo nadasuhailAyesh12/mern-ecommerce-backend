@@ -1,11 +1,12 @@
-const APIFeatures = require("../helpers/APIFeatures");
-const ErrorHandler = require("../helpers/ErrorHandler");
-const Product = require("../models/Product");
+const fs = require("fs");
+
+const APIFeatures = require("../helpers/APIFeaturesHelper");
+const ErrorHandler = require("../helpers/ErrorHandlerHelper");
+const UploadPhotoHelper = require("../helpers/UploadPhotoHelper");
 const productRepository = require("../repositories/ProductRepository")
 
-
 const createProduct = async (body) => {
-    // should add user id and image uploding later, authorisation just for admin users
+    // should add user id later,authorisation just for admin users
     const product = await productRepository.createProduct(body);
     return product;
 }
@@ -43,5 +44,21 @@ const deleteProduct = async (id) => {
     await productRepository.deleteProduct(id)
 }
 
-const productService = { createProduct, getProducts, getSingleProduct, updateProduct, deleteProduct }
+const uploadPhoto = async (files) => {
+    const fileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+    if (!fileTypes.includes(files.image.mimetype)) {
+        throw new ErrorHandler("unsupported file format", 400);
+    }
+
+    const cloudPhoto = await UploadPhotoHelper(files.image.tempFilePath, "products");
+    const image = {
+        url: cloudPhoto.secure_url,
+        public_id: cloudPhoto.public_id
+    }
+    fs.unlinkSync(files.image.tempFilePath);
+    return image;
+}
+
+const productService = { createProduct, getProducts, getSingleProduct, updateProduct, deleteProduct, uploadPhoto }
 module.exports = productService;

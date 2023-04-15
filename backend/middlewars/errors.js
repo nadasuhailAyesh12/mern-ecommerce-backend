@@ -1,5 +1,5 @@
 const { node_env } = require("../config/enviroment");
-const ErrorHandler = require("../helpers/ErrorHandler");
+const ErrorHandler = require("../helpers/ErrorHandlerHelper");
 
 module.exports = (err, req, res, next) => {
     err.message = err.message || "internal server error";
