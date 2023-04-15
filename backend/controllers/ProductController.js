@@ -2,12 +2,15 @@ const productService = require("../services/ProductService");
 const catchAsyncErrors = require("../middlewars/catchAsyncErrors");
 
 const createProduct = catchAsyncErrors(async (req, res) => {
+    const image = await productService.uploadPhoto(req.files);
+    req.body.image = image;
     const product = await productService.createProduct(req.body);
+
     res.status(201).json({
         success: true,
         product,
-    });
-});
+    })
+})
 
 const getProducts = catchAsyncErrors(async (req, res) => {
     const { products, productsCount } = await productService.getProducts(req.query)
