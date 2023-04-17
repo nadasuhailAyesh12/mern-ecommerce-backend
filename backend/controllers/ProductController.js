@@ -1,5 +1,5 @@
 const productService = require("../services/ProductService");
-const catchAsyncErrors = require("../middlewars/catchAsyncErrors");
+const catchAsyncErrors = require("../middlewars/CatchAsyncErrorsMiddleware");
 
 const createProduct = catchAsyncErrors(async (req, res) => {
     const image = await productService.uploadPhoto(req.files);
