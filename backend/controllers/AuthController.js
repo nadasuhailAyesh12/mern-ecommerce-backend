@@ -36,7 +36,6 @@ const logout = catchAsyncErrors(async (req, res) => {
 });
 
 const forgetPassword = catchAsyncErrors(async (req, res) => {
-
     await userService.forgetPassword(req.body.email, req)
     res.status(200).json({
         success: true,
@@ -44,5 +43,17 @@ const forgetPassword = catchAsyncErrors(async (req, res) => {
     });
 });
 
-const AuthController = { register, login, logout, forgetPassword };
+const resetPassword = catchAsyncErrors(async (req, res) => {
+    const { password, confirmPassword } = req.body;
+    const { token } = req.params;
+
+    await userService.resetPassword(password, confirmPassword, token);
+
+    res.status(200).json({
+        success: true
+    });
+});
+
+
+const AuthController = { register, login, logout, forgetPassword, resetPassword };
 module.exports = AuthController;

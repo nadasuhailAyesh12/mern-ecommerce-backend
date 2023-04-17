@@ -36,6 +36,7 @@ const forgetPassword = async (email, request) => {
     }
 
     const resetToken = await AuthHelper.generateResetPasswordToken(user)
+    await user.save({ validateBeforeSave: false });
 
     const resetUrl = `${request.protocol}://${request.get('host')}/api/v1/auth/resetPassword/${resetToken}`
     const message = `Your password reset token is as follow:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`;
@@ -55,5 +56,28 @@ const forgetPassword = async (email, request) => {
     }
 }
 
-const userService = { register, login, forgetPassword };
+const resetPassword = async (password, confirmedPassword, token) => {
+    const resetPasswordToken = AuthHelper.hashToken(token);
+    const user = await UserRepository.getUser({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() }
+    })
+
+    if (!user) {
+        throw new ErrorHandler("Password reset token is invalid or has been expired", 400)
+    }
+
+    if (password !== confirmedPassword) {
+        throw new ErrorHandler("Passwords doesn’t match", 400);
+    }
+
+    user.password = await AuthHelper.hashPassword(password);
+
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+}
+
+const userService = { register, login, forgetPassword, resetPassword };
 module.exports = userService;

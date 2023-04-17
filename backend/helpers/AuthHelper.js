@@ -61,6 +61,11 @@ const generateResetPasswordToken = async (user) => {
     return resetToken;
 };
 
-const AuthHelper = { hashPassword, generateToken, comparePassword, verifyToken, generateResetPasswordToken }
+const hashToken = (token) => {
+    token = crypto.createHash('sha256').update(token).digest('hex');
+    return token;
+}
+
+const AuthHelper = { hashPassword, generateToken, comparePassword, verifyToken, generateResetPasswordToken, hashToken }
 module.exports = AuthHelper
 
