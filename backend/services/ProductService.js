@@ -45,19 +45,21 @@ const deleteProduct = async (id) => {
 }
 
 const uploadPhoto = async (files) => {
-    const fileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (files) {
+        const fileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-    if (!fileTypes.includes(files.image.mimetype)) {
-        throw new ErrorHandler("unsupported file format", 400);
-    }
+        if (!fileTypes.includes(files.image.mimetype)) {
+            throw new ErrorHandler("unsupported file format", 400);
+        }
 
-    const cloudPhoto = await UploadPhotoHelper(files.image.tempFilePath, "products");
-    const image = {
-        url: cloudPhoto.secure_url,
-        public_id: cloudPhoto.public_id
+        const cloudPhoto = await UploadPhotoHelper(files.image.tempFilePath, "products");
+        const image = {
+            url: cloudPhoto.secure_url,
+            public_id: cloudPhoto.public_id
+        }
+        fs.unlinkSync(files.image.tempFilePath);
+        return image;
     }
-    fs.unlinkSync(files.image.tempFilePath);
-    return image;
 }
 
 const productService = { createProduct, getProducts, getSingleProduct, updateProduct, deleteProduct, uploadPhoto }

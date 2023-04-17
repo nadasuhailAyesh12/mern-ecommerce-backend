@@ -1,11 +1,11 @@
 const productController = require('../controllers/ProductController')
-const isAuthenticatedUser = require('../middlewars/AuthMiddleware')
+const AuthMiddlewares = require('../middlewars/AuthMiddleware')
 const productRouter = require('express').Router()
 
-productRouter.post('/', productController.createProduct)
-productRouter.get('/', isAuthenticatedUser, productController.getProducts)
+productRouter.post('/', AuthMiddlewares.isAuthenticatedUser, AuthMiddlewares.authorizeRole('Admin'), productController.createProduct)
+productRouter.get('/', productController.getProducts)
 productRouter.get('/:id', productController.getSingleProduct)
-productRouter.put('/:id', productController.updateProduct)
-productRouter.delete('/:id', productController.deleteProduct)
+productRouter.put('/:id', AuthMiddlewares.isAuthenticatedUser, AuthMiddlewares.authorizeRole("Admin"), productController.updateProduct)
+productRouter.delete('/:id', AuthMiddlewares.isAuthenticatedUser, AuthMiddlewares.authorizeRole("Admin"), productController.deleteProduct)
 
 module.exports = productRouter;
