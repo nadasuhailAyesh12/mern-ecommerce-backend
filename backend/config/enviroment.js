@@ -4,7 +4,13 @@ dotenv.config({ path: 'backend/.env' });
 
 const { DATABASE_URL, PORT, NODE_ENV, CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY,
-    CLOUDINARY_SECRET_KEY, JSONWEBTOKEN_SECRET_KEY, COOKIE_EXPIRES_TIME } = process.env;
+    CLOUDINARY_SECRET_KEY, JSONWEBTOKEN_SECRET_KEY, COOKIE_EXPIRES_TIME,
+    SMTP_HOST,
+    SMTP_PORT,
+    SMTP_USER,
+    SMTP_PASSWORD,
+    SMTP_FROM_EMAIL,
+    SMTP_FROM_NAME } = process.env;
 
 const config = {
     database: {
@@ -22,6 +28,14 @@ const config = {
     },
     cookieConfig: {
         expiresTime: COOKIE_EXPIRES_TIME
+    },
+    nodemailerConfig: {
+        user: SMTP_USER,
+        password: SMTP_PASSWORD,
+        port: SMTP_PORT,
+        from: SMTP_FROM_EMAIL,
+        name: SMTP_FROM_NAME,
+        host: SMTP_HOST
     }
 };
 
