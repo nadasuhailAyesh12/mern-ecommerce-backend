@@ -1,9 +1,9 @@
 const catchAsyncErrors = require("../middlewars/CatchAsyncErrorsMiddleware");
-const userService = require("../services/AuthService");
+const AuthService = require("../services/AuthService");
 const { expiresTime } = require("../config/enviroment").cookieConfig;
 
 const register = catchAsyncErrors(async (req, res) => {
-    const { user, token, tokenCookieOptions } = await userService.register(
+    const { user, token, tokenCookieOptions } = await AuthService.register(
         req.body
     );
 
@@ -16,7 +16,7 @@ const register = catchAsyncErrors(async (req, res) => {
 });
 
 const login = catchAsyncErrors(async (req, res) => {
-    const { user, token, tokenCookieOptions } = await userService.login(req.body);
+    const { user, token, tokenCookieOptions } = await AuthService.login(req.body);
 
     res.cookie("token", token, tokenCookieOptions);
     res.json({
@@ -36,7 +36,7 @@ const logout = catchAsyncErrors(async (req, res) => {
 });
 
 const forgetPassword = catchAsyncErrors(async (req, res) => {
-    await userService.forgetPassword(req.body.email, req)
+    await AuthService.forgetPassword(req.body.email, req)
     res.status(200).json({
         success: true,
         message: `Email sent to ${req.body.email}`
@@ -47,7 +47,7 @@ const resetPassword = catchAsyncErrors(async (req, res) => {
     const { password, confirmPassword } = req.body;
     const { token } = req.params;
 
-    await userService.resetPassword(password, confirmPassword, token);
+    await AuthService.resetPassword(password, confirmPassword, token);
 
     res.status(200).json({
         success: true

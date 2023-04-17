@@ -13,6 +13,11 @@ const register = async (userData) => {
 
 const login = async (userData) => {
     const { email, password } = userData;
+
+    if (!email || !password) {
+        throw new ErrorHandler('Please enter email & password', 400)
+    }
+
     const user = await UserRepository.getUser({ email });
     const loginUser = await UserRepository.getUser({ email }).select("+password");
 
@@ -79,5 +84,5 @@ const resetPassword = async (password, confirmedPassword, token) => {
     await user.save();
 }
 
-const userService = { register, login, forgetPassword, resetPassword };
-module.exports = userService;
+const AuthService = { register, login, forgetPassword, resetPassword };
+module.exports = AuthService;
