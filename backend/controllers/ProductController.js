@@ -4,6 +4,7 @@ const catchAsyncErrors = require("../middlewars/CatchAsyncErrorsMiddleware");
 const createProduct = catchAsyncErrors(async (req, res) => {
     const image = await productService.uploadPhoto(req.files);
     req.body.image = image;
+    req.body.user = req.user._id;
     const product = await productService.createProduct(req.body);
 
     res.status(201).json({
