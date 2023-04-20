@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const { uri } = require('../config/enviroment').database
+const { devUri } = require('../config/enviroment').database
 
 const dbConnection = async () => {
     try {
-        await mongoose.connect(uri, {
+        await mongoose.connect(devUri, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
