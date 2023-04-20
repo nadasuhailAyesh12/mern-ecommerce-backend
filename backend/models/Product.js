@@ -104,11 +104,11 @@ const productSchema = new mongoose.Schema({
 
         }
     }],
-    user: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
-        required: true,
-    },
+    // user: {
+    //     type: mongoose.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true,
+    // },
     image:
     {
         public_id: {

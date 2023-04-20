@@ -6,7 +6,6 @@ const UploadPhotoHelper = require("../helpers/UploadPhotoHelper");
 const productRepository = require("../repositories/ProductRepository")
 
 const createProduct = async (body) => {
-    // should add user id later,authorisation just for admin users
     const product = await productRepository.createProduct(body);
     return product;
 }
@@ -31,14 +30,13 @@ const getSingleProduct = async (id) => {
     return product
 }
 
-//it will  later contain authosization for admin users only
 const updateProduct = async (id, options) => {
     await getSingleProduct(id);
     const product = await productRepository.updateProduct(id, options)
     return product;
 }
 
-//it will  later contain authosization for admin users only and also delete images associated with it
+//it will  later  delete images associated with products
 const deleteProduct = async (id) => {
     await getSingleProduct(id);
     await productRepository.deleteProduct(id)

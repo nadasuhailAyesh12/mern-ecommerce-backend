@@ -9,7 +9,7 @@ const register = catchAsyncErrors(async (req, res) => {
 
     res.cookie("token", token, tokenCookieOptions);
 
-    res.json({
+    res.status(201).json({
         success: true,
         user,
     });
@@ -19,7 +19,7 @@ const login = catchAsyncErrors(async (req, res) => {
     const { user, token, tokenCookieOptions } = await AuthService.login(req.body);
 
     res.cookie("token", token, tokenCookieOptions);
-    res.json({
+    res.status(200).json({
         success: true,
         user,
     });

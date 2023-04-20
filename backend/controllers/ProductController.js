@@ -9,14 +9,14 @@ const createProduct = catchAsyncErrors(async (req, res) => {
 
     res.status(201).json({
         success: true,
-        product,
+        product
     })
 })
 
 const getProducts = catchAsyncErrors(async (req, res) => {
     const { products, productsCount } = await productService.getProducts(req.query)
 
-    res.status(201).json({
+    res.status(200).json({
         success: true,
         count: products.length,
         products,
