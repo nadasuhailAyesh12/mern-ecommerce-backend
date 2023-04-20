@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: 'backend/.env' });
 
-const { DATABASE_URL, PORT, NODE_ENV, CLOUDINARY_CLOUD_NAME,
+const { DEVELOPMENT_DATABASE_URL, TEST_DATABASE_URL, PORT, NODE_ENV, CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY,
     CLOUDINARY_SECRET_KEY, JSONWEBTOKEN_SECRET_KEY, COOKIE_EXPIRES_TIME,
     SMTP_HOST,
@@ -14,7 +14,8 @@ const { DATABASE_URL, PORT, NODE_ENV, CLOUDINARY_CLOUD_NAME,
 
 const config = {
     database: {
-        uri: DATABASE_URL
+        testUri: TEST_DATABASE_URL,
+        devUri: DEVELOPMENT_DATABASE_URL
     },
     port: PORT || 5000,
     node_env: NODE_ENV,
