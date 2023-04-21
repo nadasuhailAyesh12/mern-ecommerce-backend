@@ -4,13 +4,13 @@ const Filter = require("bad-words");
 const productSchema = new mongoose.Schema({
     name: {
         type: "string",
-        // required: [true, "please enter a product name"],
+        required: [true, "please enter a product name"],
         trim: true,
         maxlength: [100, "product name can’t exceed 100 characters"],
     },
     description: {
         type: "string",
-        // required: [true, "please enter a product description"],
+        required: [true, "please enter a product description"],
         validate: {
             validator:
                 (val) => {
@@ -21,17 +21,17 @@ const productSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        // required: [true, "please enter a product price"],
+        required: [true, "please enter a product price"],
         maxlength: [5, "product  price can’t exceed 5 characters"],
         default: 0.0,
     },
     ratings: {
         type: Number,
-        // required: [true, "please enter a rating"],
+        required: [true, "please enter a rating"],
     },
     category: {
         type: "string",
-        // required: [true, "please enter your selected category "],
+        required: [true, "please enter your selected category "],
         validate: {
             validator:
                 (val) => {
@@ -56,11 +56,11 @@ const productSchema = new mongoose.Schema({
     },
     seller: {
         type: 'string',
-        // required: [true, 'please enter  product seller'],
+        required: [true, 'please enter  product seller'],
     },
     stock: {
         type: Number,
-        // required: [true, 'please enter  product stock'],
+        required: [true, 'please enter  product stock'],
         default: 0,
 
     },
@@ -73,11 +73,11 @@ const productSchema = new mongoose.Schema({
         user: {
             type: mongoose.Types.ObjectId,
             ref: 'User',
-            // required: true,
+            required: true,
         },
         name: {
             type: String,
-            // required: true,
+            required: true,
             validate: {
                 validator: (val) => {
                     return !(new Filter().isProfane(val))
@@ -88,13 +88,13 @@ const productSchema = new mongoose.Schema({
         ,
         rating: {
             type: Number,
-            // required: true,
+            required: true,
             default: 0
         }
         ,
         comment: {
             type: String,
-            // required: true,
+            required: true,
             validate: {
                 validator: (val) => {
                     return !(new Filter().isProfane(val))

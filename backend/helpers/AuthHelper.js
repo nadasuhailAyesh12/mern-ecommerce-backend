@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require('../config/enviroment');
 const crypto = require('crypto');
+const ErrorHandler = require('./ErrorHandlerHelper');
+
 
 const generateToken = (id) => {
     const tokenCookieOptions = {
@@ -35,7 +37,12 @@ const verifyToken = (token) => {
     })
 }
 
-const hashPassword = async password => await bcrypt.hash(password, 12)
+const hashPassword = async password => {
+    if (!password) {
+        throw new ErrorHandler('Password is required', 400);
+    }
+    return await bcrypt.hash(password, 12)
+}
 
 const comparePassword = (password, userPassword) => {
     return new Promise((resolve, reject) => {

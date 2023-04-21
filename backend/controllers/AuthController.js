@@ -1,19 +1,42 @@
 const catchAsyncErrors = require("../middlewars/CatchAsyncErrorsMiddleware");
 const AuthService = require("../services/AuthService");
 const { expiresTime } = require("../config/enviroment").cookieConfig;
+const ErrorHandler = require("../helpers/ErrorHandlerHelper");
 
-const register = catchAsyncErrors(async (req, res) => {
-    const { user, token, tokenCookieOptions } = await AuthService.register(
-        req.body
-    );
+const register = async (req, res) => {
+    try {
+        const { user, token, tokenCookieOptions } = await AuthService.register(
+            req.body
+        );
 
-    res.cookie("token", token, tokenCookieOptions);
+        res.cookie("token", token, tokenCookieOptions);
 
-    res.status(201).json({
-        success: true,
-        user,
-    });
-});
+        res.status(201).json({
+            success: true,
+            user
+        });
+    }
+    catch (err) {
+        if (!err instanceof ErrorHandler) {
+            return next(err);
+        }
+
+        if (err.name === "ValidationError") {
+            const message = Object.values(err.errors).map(value => value.message);
+            err = new ErrorHandler(message, 400);
+        }
+
+        if (err.code === 11000) {
+            const message = `duplicate ${Object.keys(err.keyValue)} entered`;
+            err = new ErrorHandler(message, 409);
+        }
+
+        res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
 
 const login = catchAsyncErrors(async (req, res) => {
     const { user, token, tokenCookieOptions } = await AuthService.login(req.body);
@@ -54,6 +77,27 @@ const resetPassword = catchAsyncErrors(async (req, res) => {
     });
 });
 
+const updatePassword = async (req, res, next) => {
+    try {
+        await AuthService.updatePassword(req.body.oldPassword, req.body.newPassword, req.user._id);
 
-const AuthController = { register, login, logout, forgetPassword, resetPassword };
+        res.status(200).json({
+            success: true
+
+        })
+    }
+    catch (err) {
+        if (!err instanceof ErrorHandler) {
+            return next(err);
+        }
+
+        res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
+
+const AuthController = { register, login, logout, forgetPassword, resetPassword, updatePassword };
 module.exports = AuthController;
