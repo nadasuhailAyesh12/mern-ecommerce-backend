@@ -36,7 +36,7 @@ const updateProduct = async (id, options) => {
     return product;
 }
 
-//it will  later  delete images associated with products
+//TODO:  delete images associated with products
 const deleteProduct = async (id) => {
     await getSingleProduct(id);
     await productRepository.deleteProduct(id)

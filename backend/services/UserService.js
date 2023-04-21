@@ -17,7 +17,17 @@ const getSpecifcUser = async (id) => {
     return user;
 }
 
+const updateUser = async (id, options) => {
+    await getSpecifcUser(id);
+    const user = await UserRepository.updateUser(id, options)
+    return user;
+}
 
+const deleteUser = async (id) => {
+    //TODO:delete user photo
+    await getSpecifcUser(id);
+    await UserRepository.deleteUser(id);
+}
 
-const UserService = { getUsers, getSpecifcUser }
+const UserService = { getUsers, getSpecifcUser, updateUser, deleteUser }
 module.exports = UserService;
