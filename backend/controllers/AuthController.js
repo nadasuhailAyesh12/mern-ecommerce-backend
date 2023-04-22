@@ -38,22 +38,35 @@ const register = async (req, res) => {
     }
 }
 
-const login = catchAsyncErrors(async (req, res) => {
-    const { user, token, tokenCookieOptions } = await AuthService.login(req.body);
+const login = async (req, res) => {
+    try {
+        const { user, token, tokenCookieOptions } = await AuthService.login(req.body);
 
-    res.cookie("token", token, tokenCookieOptions);
-    res.status(200).json({
-        success: true,
-        user,
-    });
-});
+        res.cookie("token", token, tokenCookieOptions);
+
+        res.status(200).json({
+            success: true,
+            user,
+        });
+    }
+    catch (err) {
+        if (!err instanceof ErrorHandler) {
+            return next(err);
+        }
+
+        res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message
+        })
+    }
+};
 
 const logout = catchAsyncErrors(async (req, res) => {
     res.clearCookie("token", {
         expires: new Date(Date.now() + expiresTime * 24 * 60 * 60 * 1000),
         httpOnly: true,
     });
-    res.json({
+    res.status(200).json({
         success: true,
     });
 });

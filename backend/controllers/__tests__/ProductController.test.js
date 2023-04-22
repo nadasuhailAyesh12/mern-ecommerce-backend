@@ -2,9 +2,10 @@ const request = require("supertest");
 const app = require("../../app");
 const { testUri } = require("../../config/enviroment").database;
 const dbConnection = require("../../db/connection");
+const seedData = require("../../db/seeders/seedDB");
 
 beforeAll(() => {
-    dbConnection(testUri);
+    dbConnection(testUri).then(() => seedData(testUri));
 });
 
 afterAll(() => {
