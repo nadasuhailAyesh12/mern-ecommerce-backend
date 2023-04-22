@@ -1,18 +1,27 @@
-const dbConnection = require("../connection");
+const { Seeder } = require('mongo-seeding');
+const products = require('../data/products')
+const users = require('../data/users')
 
-dbConnection();
+const seedData = (url) => {
+    const seeder = new Seeder({
+        database: url,
+        dropDatabase: true
+    });
 
-const seedData = async (model, data) => {
-    try {
-        await model.deleteMany();
-        console.log("data deleted");
-        await model.insertMany(data);
-        console.log("data inserted");
-        process.exit();
-    } catch (error) {
-        console.log(error.message);
-        process.exit();
-    }
-};
+    const collections = [
+
+        {
+            name: 'products',
+            documents: products
+        },
+        {
+            name: 'users',
+            documents: users
+        }
+    ]
+    return seeder.import(collections)
+}
 
 module.exports = seedData;
+
+
