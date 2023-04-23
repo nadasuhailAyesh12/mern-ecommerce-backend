@@ -11,18 +11,7 @@ const products = [
         stock: 50,
         numOfReview: 32,
         reviews: [],
-        user: {
-            _id: new mongoose.Types.ObjectId('64440b692ee3eb5ff056b800'),
-            name: "Nada",
-            email: "nada@gmail.com",
-            password: "$2b$12$PjAn/.WYPIH/4kEHsEgUtu30kxlwdQdDvK7bRDaCP18L/r1oDQ2/e",
-            avatar: {
-                public_id: "nada_gl8z2i",
-                url: "https://res.cloudinary.com/dgelwljtb/image/upload/v1679645193/nada_gl8z2i.jpg"
-            },
-            role: "Admin"
-        },
-
+        user: new mongoose.Types.ObjectId('64440b692ee3eb5ff056b800'),
         image: {
             public_id: "0",
             url: "https://media.istockphoto.com/id/1253169835/photo/abstract-geometric-shape-cylinder-and-torus-design-for-cosmetic-or-product-display-podium-3d.jpg?s=2048x2048&w=is&k=20&c=YsgoVKlqVWlUgIez4L8EW95SEX6w-8va9BIwJUg0eCM="

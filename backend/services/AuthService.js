@@ -4,9 +4,11 @@ const sendEmail = require("../helpers/SendEmail");
 const UserRepository = require("../repositories/userRepository");
 
 const register = async (userData) => {
-    const password = await AuthHelper.hashPassword(userData.password);
-    userData.password = password;
-    //TODO:upload profile photo
+    if (userData.password) {
+        const password = await AuthHelper.hashPassword(userData.password);
+        userData.password = password;
+    }
+
     const user = await UserRepository.createUser(userData);
     const [token, tokenCookieOptions] = await AuthHelper.generateToken(user._id);
     return { user, token, tokenCookieOptions };

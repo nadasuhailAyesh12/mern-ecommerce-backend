@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const APIFeatures = require("../helpers/APIFeaturesHelper");
 const ErrorHandler = require("../helpers/ErrorHandlerHelper");
-const UploadPhotoHelper = require("../helpers/UploadPhotoHelper");
+const { UploadPhotoHelper, destroyPhotoHelper } = require("../helpers/UploadPhotoHelper");
 const productRepository = require("../repositories/ProductRepository")
 
 const createProduct = async (body) => {
@@ -36,9 +36,10 @@ const updateProduct = async (id, options) => {
     return product;
 }
 
-//TODO:  delete images associated with products
 const deleteProduct = async (id) => {
-    await getSingleProduct(id);
+    const product = await getSingleProduct(id);
+    const image_id = product.image.public_id
+    destroyPhotoHelper(image_id);
     await productRepository.deleteProduct(id)
 }
 

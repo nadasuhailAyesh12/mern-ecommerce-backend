@@ -9,4 +9,9 @@ const UploadPhotoHelper = async (file, folder) => {
     return image;
 }
 
-module.exports = UploadPhotoHelper;
+const destroyPhotoHelper = async (id) => {
+    cloudinary.v2.config(cloudinaryConfig);
+    await cloudinary.v2.uploader.destroy(id);
+}
+
+module.exports = { UploadPhotoHelper, destroyPhotoHelper };

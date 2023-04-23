@@ -2,9 +2,11 @@ const catchAsyncErrors = require("../middlewars/CatchAsyncErrorsMiddleware");
 const AuthService = require("../services/AuthService");
 const { expiresTime } = require("../config/enviroment").cookieConfig;
 const ErrorHandler = require("../helpers/ErrorHandlerHelper");
+const UserService = require("../services/UserService");
 
 const register = async (req, res) => {
     try {
+        req.body.avatar = await UserService.uploadProfilePhoto(req.files);
         const { user, token, tokenCookieOptions } = await AuthService.register(
             req.body
         );
@@ -110,7 +112,6 @@ const updatePassword = async (req, res, next) => {
         })
     }
 }
-
 
 const AuthController = { register, login, logout, forgetPassword, resetPassword, updatePassword };
 module.exports = AuthController;

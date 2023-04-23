@@ -38,9 +38,9 @@ const verifyToken = (token) => {
 }
 
 const hashPassword = async password => {
-    if (!password) {
-        throw new ErrorHandler('Password is required', 400);
-    }
+    // if (!password) {
+    //     throw new ErrorHandler('Password is required', 400);
+    // }
     return await bcrypt.hash(password, 12)
 }
 
