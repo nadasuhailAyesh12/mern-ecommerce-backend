@@ -3,7 +3,6 @@ const http = require('http');
 const { port } = require('./config/enviroment');
 const app = require('./app.js');
 const dbConnection = require('./db/connection');
-const { devUri } = require('./config/enviroment').database
 const server = http.createServer(app)
 
 process.on('uncaughtException', err => {
@@ -12,7 +11,7 @@ process.on('uncaughtException', err => {
     process.exit(1);
 })
 
-dbConnection(devUri).then(() => server.listen(port, () => {
+dbConnection().then(() => server.listen(port, () => {
     console.log(` server is listening on port ${port} `);
 }))
     .catch(err => console.error(err))

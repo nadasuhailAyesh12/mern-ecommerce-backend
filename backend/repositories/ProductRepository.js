@@ -10,8 +10,6 @@ const getProducts = () => {
     }
 }
 
-
-
 const getSingleProduct = (id) => Product.findById(id)
 
 const updateProduct = (id, options) => Product.findByIdAndUpdate(id, { ...options }, {

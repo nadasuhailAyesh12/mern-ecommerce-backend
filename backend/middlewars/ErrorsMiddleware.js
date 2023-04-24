@@ -5,7 +5,7 @@ module.exports = (err, req, res, next) => {
     err.message = err.message || "internal server error";
     err.statusCode = err.statusCode || 500;
 
-    if (node_env == "DEVELOPMENT") {
+    if (node_env == "development") {
         console.log(err);
 
         res.status(err.statusCode).json({
@@ -16,12 +16,12 @@ module.exports = (err, req, res, next) => {
         });
     }
 
-    else if (node_env === "PRODUCTION") {
+    else if (node_env === "production" || node_env === "test") {
         if (err.name == "CastError") {
             err = new ErrorHandler(`Resource not found. Invalid :${err.path}`, 400);
         }
 
-        if (err.name === "validationError") {
+        if (err.name === "ValidationError") {
             const message = Object.values(err.errors).map(value => value.message);
             err = new ErrorHandler(message, 400);
         }
@@ -41,9 +41,10 @@ module.exports = (err, req, res, next) => {
             err = new ErrorHandler(message, 400);
         }
 
+
         res.status(err.statusCode).json({
-            sucess: false,
-            message: err.message,
+            success: false,
+            message: err.message
         });
     }
 };

@@ -1,17 +1,17 @@
-const request = require("supertest");
-const app = require("../../app");
-const { testUri } = require("../../config/enviroment").database;
-const dbConnection = require("../../db/connection");
 const mongoose = require("mongoose");
+const request = require("supertest");
+
+const app = require("../../app");
+const dbConnection = require("../../db/connection");
 const User = require("../../models/User");
 
 beforeAll(() => {
-    dbConnection(testUri)
+    dbConnection()
 });
 
 afterAll(async () => {
     await User.deleteMany()
-    dbConnection(testUri).then((db) => db.connection.close());
+    dbConnection().then((db) => db.connection.close());
 
 });
 
@@ -70,7 +70,6 @@ describe("POST /api/v1/auth/signup", () => {
             })
             expect(res.status).toBe(200);
             expect(res.body.success).toBe(true);
-
         })
 
         test("invalid login credentials", async () => {

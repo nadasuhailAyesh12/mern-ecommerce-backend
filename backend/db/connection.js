@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
+const { uri } = require("../config/enviroment").database;
 
-const dbConnection = (url) => mongoose.connect(url)
+const dbConnection = () => mongoose.connect(uri)
 
 module.exports = dbConnection;

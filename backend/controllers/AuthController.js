@@ -1,10 +1,8 @@
-const catchAsyncErrors = require("../middlewars/CatchAsyncErrorsMiddleware");
 const AuthService = require("../services/AuthService");
 const { expiresTime } = require("../config/enviroment").cookieConfig;
-const ErrorHandler = require("../helpers/ErrorHandlerHelper");
 const UserService = require("../services/UserService");
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
         req.body.avatar = await UserService.uploadProfilePhoto(req.files);
         const { user, token, tokenCookieOptions } = await AuthService.register(
@@ -15,34 +13,19 @@ const register = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            user
+            user,
         });
     }
     catch (err) {
-        if (!err instanceof ErrorHandler) {
-            return next(err);
-        }
-
-        if (err.name === "ValidationError") {
-            const message = Object.values(err.errors).map(value => value.message);
-            err = new ErrorHandler(message, 400);
-        }
-
-        if (err.code === 11000) {
-            const message = `duplicate ${Object.keys(err.keyValue)} entered`;
-            err = new ErrorHandler(message, 409);
-        }
-
-        res.status(err.statusCode || 500).json({
-            success: false,
-            message: err.message
-        })
+        return next(err);
     }
-}
+};
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
-        const { user, token, tokenCookieOptions } = await AuthService.login(req.body);
+        const { user, token, tokenCookieOptions } = await AuthService.login(
+            req.body
+        );
 
         res.cookie("token", token, tokenCookieOptions);
 
@@ -52,66 +35,83 @@ const login = async (req, res) => {
         });
     }
     catch (err) {
-        if (!err instanceof ErrorHandler) {
-            return next(err);
-        }
-
-        res.status(err.statusCode || 500).json({
-            success: false,
-            message: err.message
-        })
+        return next(err);
     }
 };
 
-const logout = catchAsyncErrors(async (req, res) => {
-    res.clearCookie("token", {
-        expires: new Date(Date.now() + expiresTime * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-    });
-    res.status(200).json({
-        success: true,
-    });
-});
+const logout = async (req, res, next) => {
+    try {
+        res.clearCookie("token", {
+            expires: new Date(Date.now() + expiresTime * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+        });
 
-const forgetPassword = catchAsyncErrors(async (req, res) => {
-    await AuthService.forgetPassword(req.body.email, req)
-    res.status(200).json({
-        success: true,
-        message: `Email sent to ${req.body.email}`
-    });
-});
+        res.status(200).json({
+            success: true,
+        });
 
-const resetPassword = catchAsyncErrors(async (req, res) => {
-    const { password, confirmPassword } = req.body;
-    const { token } = req.params;
+    }
+    catch (err) {
+        next(err);
+    }
+};
 
-    await AuthService.resetPassword(password, confirmPassword, token);
+const forgetPassword = async (req, res, next) => {
+    try {
+        await AuthService.forgetPassword(req.body.email, req);
 
-    res.status(200).json({
-        success: true
-    });
-});
+        res.status(200).json({
+            success: true,
+            message: `Email sent to ${req.body.email}`,
+        });
+
+    }
+    catch (err) {
+        return next(err);
+    }
+};
+
+const resetPassword = async (req, res, next) => {
+    try {
+        const { password, confirmPassword } = req.body;
+        const { token } = req.params;
+
+        await AuthService.resetPassword(password, confirmPassword, token);
+
+        res.status(200).json({
+            success: true,
+        });
+
+    }
+    catch (err) {
+        return next(err);
+    }
+};
 
 const updatePassword = async (req, res, next) => {
     try {
-        await AuthService.updatePassword(req.body.oldPassword, req.body.newPassword, req.user._id);
+        await AuthService.updatePassword(
+            req.body.oldPassword,
+            req.body.newPassword,
+            req.user._id
+        );
 
         res.status(200).json({
-            success: true
+            success: true,
+        });
 
-        })
     }
     catch (err) {
-        if (!err instanceof ErrorHandler) {
-            return next(err);
-        }
-
-        res.status(err.statusCode || 500).json({
-            success: false,
-            message: err.message
-        })
+        return next(err);
     }
-}
+};
 
-const AuthController = { register, login, logout, forgetPassword, resetPassword, updatePassword };
+const AuthController = {
+    register,
+    login,
+    logout,
+    forgetPassword,
+    resetPassword,
+    updatePassword,
+};
 module.exports = AuthController;

@@ -1,10 +1,11 @@
 const { Seeder } = require('mongo-seeding');
 const products = require('../data/products')
 const users = require('../data/users')
+const { uri } = require("../../config/enviroment").database
 
-const seedData = (url) => {
+const seedData = () => {
     const seeder = new Seeder({
-        database: url,
+        database: uri,
         dropDatabase: true
     });
 
