@@ -6,7 +6,7 @@
   "scripts": {
     "dev": " cross-env NODE_ENV=development nodemon backend/server.js",
     "prod": "cross-env  NODE_ENV=production  nodemon backend/server.js",
-    "seeder": " node backend/scripts/seeder.js",
+    "seeder": "  cross-env NODE_ENV=development node backend/scripts/seeder.js",
     "testAuth": "cross-env NODE_ENV=test jest --testTimeout=5000  node backend/controllers/__tests__/AuthController.test.js",
      "testProduct": "cross-env NODE_ENV=test jest --testTimeout=5000  node backend/controllers/__tests__/ProductController.test.js"
   },
